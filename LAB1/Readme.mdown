@@ -1,0 +1,28 @@
+##### Pie de pantalla y modo grafico
+
+a)  Implementar, dentro de _console.c_, las funciones **vgainit(void)**, **write\_regs(unsigned char *regs)**, **set\_text\_mode** y **set\_graphic\_mode**.
+
+b)  Definir los puertos VGA y registros de los modos texto y grafico para que **write\_regs(unsigned char *regs)** pueda trabajar con éstos y así poder escribir el pie de pantalla implementado en **vgainit(void)**.
+
+c)  Declarar la función **vgainit(void)** en **defs.h** y en **main.c** para que se ejecute al iniciar xv6.
+
+#### Cambios de modo y Plotopixel
+
+f)  Por cuestiones de prolijidad, pasar todo lo implementado y definido en _console.c_ a un nuevo archivo (excepto **vgainit()**), en éste caso a _vga.c_. Notar que éste nuevo archivo debe tener todos los include de _console.c_.
+
+g)  Para crear la syscall **modeswitch** es necesario declararla en:
+        1)  _syscall.c_ :   **extern int sys\_modeswitch(void);** y **[SYS\_modeswitch] sys\_sysname**.
+        2)  _usys.S_ :      **SYSCALL(modeswitch)**
+        3)  _user.h_ :      **int modeswitch(int)**
+        4)  _syscall.h_ :   **SYS_modeswitch 22**}
+                                El número, en éste caso 22, debe ser uno no usado por otra syscall en la lista.
+
+h)  En _sysproc.c_ implementar el funcionamiento de nuestra nueva syscall. En éste caso, toma un parámetro y dependiendo de su valor, cambia de modo texto a gráfico y viceversa usando las funciones de _vga.c_ por lo que es necesario declarar las funciones en _defs.h_.
+
+i)  Crear un archivo _modeswitch.c_ que va a tener la función a utilizar por el usuario.
+
+j)  Para que todo funcione es necesario (indispensable) incluir la función **modeswitch** en _UPROGS_ y el archivo **vga.o** en _OBJS_ para poder utilizar las funciones de _vga.c_ y nuestro modeswitch.
+
+\**Para implementar plotopixel hay que seguir los pasos g) al h), excluyendo el paso i) si no se quiere generar una función para el usuario.
+
+\**Cambiar **vgainit(void)** por **vgainit(int mode)** en _console.c_ y **vgainit(void)** por **vgainit(0) ó vgainit(1)** en _main.c_ para que se inicie en el modo que se desee.
